@@ -1,5 +1,27 @@
 from os.path import exists
 import random
+import math
+
+def sigmoid(x):
+  return 1 / (1 + math.exp(-x))
+
+def cost(w,l,input,cor):
+    for i in range(len(l[0])):
+        l[0][i]=input[i]
+    for i in range(len(w)):
+        for j in range(len(w[i])):
+            sum = 0
+            for k in range(len(w[i][j])):
+                if k == 0:
+                    sum = sum + w[i][j][k]
+                else:
+                    sum = sum + w[i][j][k] * l[i][k - 1]
+            l[i + 1][j] = sigmoid(sum)
+    c = 1
+    for i in range(len(l[len(l) - 1])):
+        c = c + (l[len(l) - 1][i] - cor[i]) * (l[len(l) - 1][i] - cor[i])
+    c = c / len(l[len(l) - 1])
+    return c
 
 # DATA IMPORT SEQUENCE #
 
@@ -11,10 +33,13 @@ nOfHLayers = 0
 
 weights = []
 # 3D list of all weights
-layer = []
+layers = []
 # 2D list of all neurons in all layers
+step = 0.01
 
 pathToFile = 'files/saved_weights.txt'  # path to weights file
+pathToResults = 'files/final_weights.txt' # path for saving weights
+pathToTraining = 'files/training_data/' # training data path
 fileExists = exists(pathToFile)  # boolean if weights file exists
 
 # saved_weights.txt
@@ -106,20 +131,20 @@ else:
                     wline = ""
                     for k in range(nOfInputs+1):
                         wline = wline + str(weights[i][j][k]) + " "
-                        print(weights[i][j][k])
+                        #print(weights[i][j][k])
                     f.writelines(wline + "\n")
                 else:
                     wline = ""
                     for k in range(nOfHidden+1):
                         wline = wline + str(weights[i][j][k]) + " "
-                        print(weights[i][j][k])
+                        #print(weights[i][j][k])
                     f.writelines(wline + "\n")
         else:
             for j in range(nOfOutput):
                 wline = ""
                 for k in range(nOfHidden+1):
                     wline = wline + str(weights[i][j][k]) + " "
-                    print(weights[i][j][k])
+                    #print(weights[i][j][k])
                 f.writelines(wline + "\n")
 
     f.close()
@@ -127,8 +152,67 @@ else:
 print(layers)
 print(weights)
 
+# weights[bridge_number][destination][source]
+
 # TRAINING SEQUENCE #
 
+for i in range(2):
+    currentPath = pathToTraining + str(i) + ".txt"
+    f = open(currentPath)
+
+    input = [float(x) for x in str(f.readline()).split()]
+    correct = [float(x) for x in str(f.readline()).split()]
+
+    print (layers[len(layers)-1])
+    print(cost(weights,layers,input,correct))
+
+    n=1
+    while n<=100:
+        for i in range(len(weights)):
+            for j in range(len(weights[i])):
+                for k in range(len(weights[i][j])):
+                    cStart = cost(weights,layers,input,correct)
+                    if weights[i][j][k]>=0 and weights[i][j][k]<=1:
+                        weights[i][j][k] = weights[i][j][k] + step;
+                        cChanged = cost(weights, layers, input, correct)
+                        if (cStart > cChanged):
+                            pass
+                        else:
+                            weights[i][j][k] = weights[i][j][k] - 2 * step;
+                    elif weights[i][j][k]<0:
+                        weights[i][j][k] = 0
+                    elif weights[i][j][k]>1:
+                        weights[i][j][k] = 1
+        print("Epoch",n,": Cost =",cost(weights,layers,input,correct))
+        n = n+1
+    print(weights)
+
 # SAVING WEIGHTS SEQUENCE #
+
+f = open(pathToResults, "w")
+f.writelines([str(nOfInputs) + "\n", str(nOfHidden) + "\n", str(nOfOutput) + "\n", str(nOfHLayers) + "\n"])
+for i in range(nOfHLayers + 1):
+    if i < nOfHLayers:
+        for j in range(nOfHidden):
+            if i == 0:
+                wline = ""
+                for k in range(nOfInputs + 1):
+                    wline = wline + str(weights[i][j][k]) + " "
+                    #print(weights[i][j][k])
+                f.writelines(wline + "\n")
+            else:
+                wline = ""
+                for k in range(nOfHidden + 1):
+                    wline = wline + str(weights[i][j][k]) + " "
+                    #print(weights[i][j][k])
+                f.writelines(wline + "\n")
+    else:
+        for j in range(nOfOutput):
+            wline = ""
+            for k in range(nOfHidden + 1):
+                wline = wline + str(weights[i][j][k]) + " "
+                #print(weights[i][j][k])
+            f.writelines(wline + "\n")
+f.close()
 
 # TESTING SEQUENCE #
