@@ -55,13 +55,13 @@ if fileExists:
 
     # Expanding weights' list and importing weights
 
-    iw = [[float(fread[y].split()[x]) for x in range(nOfInputs)] for y in range(nOfHidden)]
+    iw = [[float(fread[y].split()[x]) for x in range(nOfInputs+1)] for y in range(nOfHidden)]
     for i in range(nOfHidden):
         fread.pop(0)
-    hw = [[float(fread[y].split()[x]) for x in range(nOfHidden)] for y in range(nOfHidden)]
+    hw = [[float(fread[y].split()[x]) for x in range(nOfHidden+1)] for y in range(nOfHidden)]
     for i in range(nOfHidden):
         fread.pop(0)
-    lhw = [[float(fread[y].split()[x]) for x in range(nOfHidden)] for y in range(nOfOutput)]
+    lhw = [[float(fread[y].split()[x]) for x in range(nOfHidden+1)] for y in range(nOfOutput)]
     for i in range(nOfOutput):
         fread.pop(0)
 
@@ -91,9 +91,9 @@ else:
     for x in range(nOfHLayers):
         layers.insert(1, hl)
 
-    iw = [[float(random.random()) for x in range(nOfInputs)] for y in range(nOfHidden)]
-    hw = [[float(random.random()) for x in range(nOfHidden)] for y in range(nOfHidden)]
-    lhw = [[float(random.random()) for x in range(nOfHidden)] for y in range(nOfOutput)]
+    iw = [[float(random.random()) for x in range(nOfInputs+1)] for y in range(nOfHidden)]
+    hw = [[float(random.random()) for x in range(nOfHidden+1)] for y in range(nOfHidden)]
+    lhw = [[float(random.random()) for x in range(nOfHidden+1)] for y in range(nOfOutput)]
 
     weights = [iw, lhw]
     for x in range(nOfHLayers - 1):
@@ -104,20 +104,20 @@ else:
             for j in range(nOfHidden):
                 if i == 0:
                     wline = ""
-                    for k in range(nOfInputs):
+                    for k in range(nOfInputs+1):
                         wline = wline + str(weights[i][j][k]) + " "
                         print(weights[i][j][k])
                     f.writelines(wline + "\n")
                 else:
                     wline = ""
-                    for k in range(nOfHidden):
+                    for k in range(nOfHidden+1):
                         wline = wline + str(weights[i][j][k]) + " "
                         print(weights[i][j][k])
                     f.writelines(wline + "\n")
         else:
             for j in range(nOfOutput):
                 wline = ""
-                for k in range(nOfHidden):
+                for k in range(nOfHidden+1):
                     wline = wline + str(weights[i][j][k]) + " "
                     print(weights[i][j][k])
                 f.writelines(wline + "\n")
