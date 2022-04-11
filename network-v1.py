@@ -52,7 +52,7 @@ fileExists = exists(pathToFile)  # boolean if weights file exists
 if fileExists:
 
     # Read weights file
-    print("Reading weights file")
+    print("Loading weights file")
 
     f = open(pathToFile)
     fread = f.readlines()
@@ -99,8 +99,9 @@ if fileExists:
 else:
 
     # Create new weights file
-    print("Creating new weights file")
-
+    #print("Creating new weights file")
+    print("Insert number of inputs, number of neurons per hidden layer, number of outputs and number of hidden layers: ")
+    print("WARNING: Test training data is prepared for networks with 2 inputs and 3 outputs!")
     nOfInputs = int(input())
     nOfHidden = int(input())
     nOfOutput = int(input())
