@@ -149,9 +149,8 @@ else:
 
     f.close()
 
-print(layers)
-print(weights)
-
+#print(layers)
+#print(weights)
 # weights[bridge_number][destination][source]
 
 # TRAINING SEQUENCE #
@@ -162,9 +161,6 @@ for i in range(2):
 
     input = [float(x) for x in str(f.readline()).split()]
     correct = [float(x) for x in str(f.readline()).split()]
-
-    print (layers[len(layers)-1])
-    print(cost(weights,layers,input,correct))
 
     n=1
     while n<=100:
@@ -185,7 +181,7 @@ for i in range(2):
                         weights[i][j][k] = 1
         print("Epoch",n,": Cost =",cost(weights,layers,input,correct))
         n = n+1
-    print(weights)
+    #print(weights)
 
 # SAVING WEIGHTS SEQUENCE #
 
