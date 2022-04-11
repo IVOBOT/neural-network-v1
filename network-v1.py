@@ -210,6 +210,7 @@ for i in range(nOfHLayers + 1):
                 wline = wline + str(weights[i][j][k]) + " "
                 #print(weights[i][j][k])
             f.writelines(wline + "\n")
+print("Weights saved!")
 f.close()
 
 # TESTING SEQUENCE #
